@@ -1,6 +1,7 @@
 package kakka
 package user
 
+import kakka.commons.BaseJsonFormats
 import spray.json.DefaultJsonProtocol
 
 /**
@@ -12,7 +13,7 @@ case class Profile (
   avatar: Option[String]
 )
 
-trait ProfileFormatter extends DefaultJsonProtocol{
+trait ProfileFormatter extends BaseJsonFormats{
   implicit val profileFormatter = jsonFormat3(Profile)
 }
 

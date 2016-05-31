@@ -13,7 +13,7 @@ trait Bootable {
     val config = serviceBootstrap.config
     println(s"Config file: ${System.getProperty("CONFIG_PATH")}")
     println("Loaded services: ")
-    val system = ActorSystem(ProjectInfo.name, config)
+    val system = ActorSystem("microservice-system", config)
     serviceBootstrap.run(system)
   }
 }

@@ -10,3 +10,10 @@ trait BasicRoute extends ErrorHandler {
   val versionNumber = 1
   val version = s"v$versionNumber"
 }
+
+object ApiMessages {
+  case class Message(message: String)
+
+  val UnknownException = "Unknown exception"
+  val UnsupportedService = "Sorry, provided service is not supported."
+}

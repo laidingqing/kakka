@@ -1,6 +1,7 @@
 package kakka
 package user
 
+import kakka.commons.BaseJsonFormats
 import org.joda.time.DateTime
 import spray.json.DefaultJsonProtocol
 
@@ -15,7 +16,7 @@ case class Authentication (
   createdAt: Option[DateTime]
 )
 
-trait AuthenticationFormatter extends DefaultJsonProtocol{
+trait AuthenticationFormatter extends BaseJsonFormats{
   implicit val authenticationFormatter = jsonFormat5(Authentication)
 }
 

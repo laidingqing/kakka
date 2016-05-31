@@ -1,6 +1,7 @@
 package kakka
 package user
 
+import kakka.commons.BaseJsonFormats
 import org.joda.time.DateTime
 import spray.json.DefaultJsonProtocol
 
@@ -17,7 +18,7 @@ case class Message (
   read: Boolean
 )
 
-trait MessageFormatter extends DefaultJsonProtocol{
+trait MessageFormatter extends BaseJsonFormats{
   implicit val messageFormatter = jsonFormat7(Message)
 }
 

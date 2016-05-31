@@ -1,7 +1,7 @@
 import cn.avalon.json._
 import spray.revolver.RevolverPlugin._
 
-name := "KakkaShopping"
+name := "Hakka Shopping"
 
 scalaVersion := "2.10.5"
 
@@ -26,8 +26,8 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-actor"   % akkaVersion,
     "com.typesafe.akka" %% "akka-slf4j"   % akkaVersion,
     "com.typesafe.akka" %% "akka-persistence-experimental" % akkaVersion,
-    "com.typesafe.akka" %%  "akka-multi-node-testkit"      % akkaVersion   % "test",
-    "com.typesafe.akka" %%  "akka-testkit"                 % akkaVersion   % "test",
+    "com.typesafe.akka" %% "akka-multi-node-testkit"      % akkaVersion   % "test",
+    "com.typesafe.akka" %% "akka-testkit"                 % akkaVersion   % "test",
     "com.typesafe.akka" %% "akka-stream-experimental" % akkaStreamVersion,
     "com.typesafe.akka" %% "akka-http-core-experimental" % akkaStreamVersion,
     "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaStreamVersion,
@@ -45,7 +45,7 @@ libraryDependencies ++= {
     "org.aspectj" % "aspectjweaver" % "1.8.5",
     "ch.qos.logback"  %  "logback-classic"    % "1.1.3",
     "commons-io" % "commons-io" % "1.3.2" % "test",
-    "com.datastax.cassandra" % "cassandra-driver-core" % "2.1.5",
+    "org.mongodb" %% "casbah" % "3.1.1",
     "joda-time" % "joda-time" % "2.2",
     "org.joda" % "joda-convert" % "1.2"
   )

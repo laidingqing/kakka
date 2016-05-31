@@ -3,14 +3,14 @@ package kakka
 import akka.actor.ActorSystem
 import akka.io.IO
 import com.typesafe.config.ConfigFactory
+import kakka.commons.ConfigHolder
 import spray.can.Http
 
-object Api extends ServiceBootstrap {
+object Api extends ServiceBootstrap with ConfigHolder{
   val role = "api"
-  val config = ConfigFactory.load()
   def run(implicit system: ActorSystem) = {
-    val host = ProjectInfo.ip
-    val httpport = ProjectInfo.httpPort
+    val host = config.getString("hostname")
+    val httpport = config.getInt("port")
     val api = system.actorOf(RestInterface.props, "api")
     IO(Http) ! Http.Bind(listener = api, interface = host, port = httpport)
   }

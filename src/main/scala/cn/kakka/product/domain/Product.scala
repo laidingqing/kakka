@@ -1,8 +1,8 @@
 package kakka
 package product
 
-import spray.json.DefaultJsonProtocol
-
+import kakka.commons.BaseJsonFormats
+import org.joda.time.DateTime
 /**
   * Created by skylai on 16/5/26.
   */
@@ -11,20 +11,30 @@ case class Product(
      name: String,
      description: String,
      defaultPrice: BigDecimal = 0,
-     category: String,
      count: Int,
-     meta: Option[MetaInfo]
-)
+     createdBy: String = "",
+     createdAt: DateTime = new DateTime(),
+     category: Category
+){
 
-trait ProductFormatter extends DefaultJsonProtocol{
-  implicit val productFormatter = jsonFormat7(Product)
+}
+
+object ProductStatus extends Enumeration {
+  type ProductStatus = Value
+  val Created, Deleted = Value
+}
+
+trait ProductFormatter extends BaseJsonFormats{
+  implicit val categoryFormatter = jsonFormat3(Category)
+  implicit val productFormatter = jsonFormat8(Product)
+
 }
 
 object ProductFormatter extends ProductFormatter
 
-
-object ProductMessage{
+object ProductActions{
   case class AddProduct(product: Product)
   case class DeleteProduct(product: String)
-  case class ListProduct(list: List[Product])
+  case class ListProduct(category: Category)
+  case class GetProduct(id: String)
 }

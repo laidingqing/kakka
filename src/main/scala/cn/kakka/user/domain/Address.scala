@@ -1,6 +1,7 @@
 package kakka
 package user
 
+import kakka.commons.BaseJsonFormats
 import spray.json.DefaultJsonProtocol
 
 /**
@@ -17,7 +18,7 @@ case class Address (
      alias: String
 )
 
-trait AddressFormatter extends DefaultJsonProtocol{
+trait AddressFormatter extends BaseJsonFormats{
   implicit val addressFormatter = jsonFormat8(Address)
 }
 

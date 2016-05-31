@@ -1,6 +1,8 @@
 package kakka
 package order
 
+import kakka.commons.BaseJsonFormats
+import org.joda.time.DateTime
 import spray.json.DefaultJsonProtocol
 
 /**
@@ -12,11 +14,12 @@ case class Order (
   price: BigDecimal,
   amount: BigDecimal,
   status: Int,
-  items: List[String]
+  items: List[String],
+  createdAt: DateTime
 )
 
-trait OrderFormatter extends DefaultJsonProtocol{
-  implicit val orderFormatter = jsonFormat6(Order)
+trait OrderFormatter extends BaseJsonFormats{
+  implicit val orderFormatter = jsonFormat7(Order)
 }
 
 object OrderFormatter extends OrderFormatter

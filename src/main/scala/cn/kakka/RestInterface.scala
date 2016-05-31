@@ -22,6 +22,7 @@ trait BaseApi extends HttpService with RouteDefinitions with ActorLogging { acto
 
   implicit val timeout = Timeout(5 seconds)
   implicit val dispatcher = context.dispatcher
+
   object IndexRoute extends IndexRoute(context)
   object UserRoute extends UserRoute(context)
   object ProductRoute extends ProductRoute(context)

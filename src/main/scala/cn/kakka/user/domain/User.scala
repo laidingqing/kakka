@@ -1,6 +1,7 @@
 package kakka
 package user
 
+import kakka.commons.BaseJsonFormats
 import org.joda.time.DateTime
 import spray.json.DefaultJsonProtocol
 
@@ -16,7 +17,8 @@ case class User (
   updatedAt: Option[DateTime]
 )
 
-trait UserFormatter extends DefaultJsonProtocol{
+trait UserFormatter extends BaseJsonFormats{
+
   implicit val userFormatter = jsonFormat6(User)
 }
 

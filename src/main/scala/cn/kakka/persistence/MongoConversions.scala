@@ -6,7 +6,7 @@ import com.mongodb.casbah.commons.MongoDBObject
 import kakka.basket.Basket
 import kakka.order.Order
 import org.joda.time.DateTime
-import kakka.product.Product
+import kakka.product.{Category, Product}
 /**
   * Created by skylai on 16/5/30.
   */
@@ -16,15 +16,23 @@ trait MongoConversions {
     MongoDBObject(
       "user" -> basket.user,
       "sku" -> basket.sku,
-      "count" -> basket.count,
+      "quantity" -> basket.quantity,
       "created_at" -> basket.createdAt
     )
   }
 
-  def productToMongo(product: Product): MongoDBObject = {
+  def productToMongo(obj: Product): MongoDBObject = {
     val db = MongoDBObject.newBuilder
-    //TODO mapping to db
-    db.result()
+    db += "title" -> MongoDBObject(obj.title.toList)
+    db += "description" -> MongoDBObject(obj.description.toList)
+    db += "properties" -> MongoDBObject(obj.properties.toList)
+    db += "price" -> obj.price
+    db += "quantity" -> obj.quantity
+    db += "sku" -> obj.sku
+    db += "categories" -> obj.categories
+    db += "images" -> obj.images
+    db += "keywords" -> obj.keyWords
+    db.result
   }
 
   def mongoToOrder(obj: DBObject): Order = {
@@ -42,7 +50,27 @@ trait MongoConversions {
     Basket(id = obj.get("_id").toString(),
       sku = obj.getAsOrElse[String]("sku", ""),
       user = obj.getAsOrElse[String]("user", ""),
-      count = obj.getAsOrElse[Int]("count", 0)
+      quantity = obj.getAsOrElse[Int]("quantity", 0)
     )
+  }
+
+
+  def mongoToProduct(obj: DBObject): Product = {
+    try {
+      Product(id = obj.getAs[ObjectId]("_id").map(_.toString),
+        sku = obj.getAsOrElse[String]("sku", ""),
+        title = obj.getAsOrElse[Map[String, String]]("name", Map.empty),
+        description = obj.getAsOrElse[Map[String, String]]("description", Map.empty),
+        properties = obj.getAsOrElse[Map[String, String]]("properties", Map.empty),
+        price = obj.getAsOrElse[Double]("price", 0.0),
+        quantity = obj.getAs[Int]("quantity") getOrElse 0,
+        categories = obj.getAsOrElse[List[String]]("categories", Nil),
+        images = obj.getAsOrElse[List[String]]("images", Nil),
+        keyWords = obj.getAsOrElse[List[String]]("keywords", Nil))
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+        throw e
+    }
   }
 }

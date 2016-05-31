@@ -7,10 +7,11 @@ import akka.util.Timeout
 
 import scala.concurrent.duration._
 import kakka.BasicRoute
-import kakka.product.{Product, ProductActor}
+import kakka.product.{Category, Product, ProductActor}
 import kakka.product.ProductActions._
 import kakka.product.ProductFormatter._
 import kakka.commons.CORSDirectives
+import org.joda.time.DateTime
 import spray.http.StatusCodes
 
 import scala.concurrent.duration._
@@ -32,7 +33,25 @@ class ProductRoute(val context: ActorContext)(implicit log: LoggingContext) exte
     pathEndOrSingleSlash{
       get{
         corsFilter(List("*")) {
-          val future = (productActor ? GetProduct("id:00000")).mapTo[Product]
+          val future = (productActor ? GetProduct("id:00000")).mapTo[Option[Product]]
+          onComplete(future) {
+            case Success(value) => complete(StatusCodes.OK, value)
+            case Failure(ex)    => complete(StatusCodes.InternalServerError, ex.getMessage)
+          }
+        }
+      }~
+      post{
+        corsFilter(List("*")) {
+          val p = new Product(sku = "e38dkjjj5875d",
+            properties = Map("color" -> "red"),
+            title = Map("test" -> "test title"),
+            description = Map("test" -> "test description"),
+            price = 0.0,
+            quantity = 100,
+            createdBy = "",
+            createdAt = new DateTime()
+          )
+          val future = (productActor ? AddProduct(p)).mapTo[Seq[String]]
           onComplete(future) {
             case Success(value) => complete(StatusCodes.OK, value)
             case Failure(ex)    => complete(StatusCodes.InternalServerError, ex.getMessage)

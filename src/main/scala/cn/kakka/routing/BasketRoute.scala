@@ -41,7 +41,7 @@ class BasketRoute(val context: ActorContext)(implicit log: LoggingContext) exten
       }~
       post{
         corsFilter(List("*")) {
-          val future = (basketActor ? AddToBasket("1", "asdfasdf", 1)).mapTo[String]
+          val future = (basketActor ? AddToBasket("1", "asdfasdf", 1)).mapTo[Seq[String]]
           onComplete(future) {
             case Success(value) => complete(StatusCodes.OK, value)
             case Failure(ex)    => complete(StatusCodes.InternalServerError, ex.getMessage)

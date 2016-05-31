@@ -27,7 +27,7 @@ class BasketActor extends Actor with ActorLogging{
       }
     }
     case AddToBasket(user, sku, count) => {
-      persistence.insert(Basket(id="", user = user, sku = sku, count = count)) match {
+      persistence.insert(Basket(id="", user = user, sku = sku, quantity = count)) match {
         case Success(ids) => sender () ! ids
         case Failure(e) => println("error:", e)
       }

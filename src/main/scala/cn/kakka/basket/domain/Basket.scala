@@ -13,7 +13,7 @@ import spray.json.{DefaultJsonProtocol, JsString, JsValue, JsonFormat}
 case class Basket (id: String,
                    user: String,
                    sku: String,
-                   count: Int = 1,
+                   quantity: Int = 1,
                    createdAt: DateTime = new DateTime(),
                    status:BasketStatus = BasketStatus.Created){
 

@@ -1,20 +1,25 @@
 package kakka
 package product
 
+import cn.kakka.product.domain.ProductImage
 import kakka.commons.BaseJsonFormats
 import org.joda.time.DateTime
 /**
   * Created by skylai on 16/5/26.
   */
 case class Product(
-     id: String,
-     name: String,
-     description: String,
-     defaultPrice: BigDecimal = 0,
-     count: Int,
+     id: Option[String] = None,
+     title: Map[String, String],
+     sku: String,
+     description: Map[String, String],
+     properties: Map[String, String],
+     price: Double = 0,
+     quantity: Int,
      createdBy: String = "",
      createdAt: DateTime = new DateTime(),
-     category: Category
+     categories: List[String] = List.empty,
+     images: List[String] = List.empty,
+     keyWords: List[String] = List.empty
 ){
 
 }
@@ -25,8 +30,7 @@ object ProductStatus extends Enumeration {
 }
 
 trait ProductFormatter extends BaseJsonFormats{
-  implicit val categoryFormatter = jsonFormat3(Category)
-  implicit val productFormatter = jsonFormat8(Product)
+  implicit val productFormatter = jsonFormat12(Product)
 
 }
 

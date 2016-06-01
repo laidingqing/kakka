@@ -33,7 +33,7 @@ class ProductRoute(val context: ActorContext)(implicit log: LoggingContext) exte
     pathEndOrSingleSlash{
       get{
         corsFilter(List("*")) {
-          val future = (productActor ? GetProduct("id:00000")).mapTo[Option[Product]]
+          val future = (productActor ? ListProducts(None)).mapTo[Option[Seq[Product]]]
           onComplete(future) {
             case Success(value) => complete(StatusCodes.OK, value)
             case Failure(ex)    => complete(StatusCodes.InternalServerError, ex.getMessage)
@@ -54,7 +54,24 @@ class ProductRoute(val context: ActorContext)(implicit log: LoggingContext) exte
           val future = (productActor ? AddProduct(p)).mapTo[Seq[String]]
           onComplete(future) {
             case Success(value) => complete(StatusCodes.OK, value)
-            case Failure(ex)    => complete(StatusCodes.InternalServerError, ex.getMessage)
+            case Failure(ex)    => {
+              ex.printStackTrace()
+              complete(StatusCodes.InternalServerError, ex.getMessage)
+            }
+          }
+        }
+      }
+    }~
+    path(Segment){ productId =>
+      get{
+        corsFilter(List("*")) {
+          val future = (productActor ? GetProduct(productId)).mapTo[Option[Product]]
+          onComplete(future) {
+            case Success(value) => complete(StatusCodes.OK, value)
+            case Failure(ex)    => {
+              ex.printStackTrace()
+              complete(StatusCodes.InternalServerError, ex.getMessage)
+            }
           }
         }
       }

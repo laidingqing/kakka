@@ -53,7 +53,7 @@ class ProductPersistence() extends Persistence{
     * @return
     */
   def findById(id: String): Try[Option[Product]] = try{
-    db(collections).findOne(MongoDBObject("_id" -> id)) match {
+    db(collections).findOne(MongoDBObject("_id" -> new ObjectId(id))) match {
       case Some(obj) => Success(Some(mongoToProduct(obj)))
       case _         => Success(None)
     }
@@ -79,12 +79,39 @@ class ProductPersistence() extends Persistence{
     * @param cat
     * @return
     */
-  def categoryProducts(cat: String): Try[Iterator[Product]] = try {
-
-    Success(for { p <- db(collections).find("categories" $in List(cat)) } yield {
-      mongoToProduct(p)
-    })
+  def findProducts(cat: Option[String]): Try[Iterator[Product]] = try {
+    cat match {
+      case None => {
+        Success(for { p <- db(collections).find() } yield {
+          mongoToProduct(p)
+        })
+      }
+      case _ => {
+        Success(for { p <- db(collections).find("categories" $in List(cat)) } yield {
+          mongoToProduct(p)
+        })
+      }
+    }
   } catch {
+    case e: Exception => Failure(e)
+  }
+
+  def updateProduct(prod: Product*): Try[Seq[String]] = try{
+    val builder = db(collections).initializeOrderedBulkOperation
+
+    val ids = for {
+      p <- prod
+      id <- p.id
+    } yield {
+      builder.find(MongoDBObject("_id" -> new ObjectId(id))).update(MongoDBObject {
+        "$set" -> productToMongo(p)
+      })
+      id
+    }
+
+    builder.execute()
+    Success(ids)
+  }catch {
     case e: Exception => Failure(e)
   }
 }

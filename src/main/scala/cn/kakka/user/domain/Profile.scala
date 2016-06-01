@@ -10,11 +10,12 @@ import spray.json.DefaultJsonProtocol
 case class Profile (
   fullName: Option[String],
   email: Option[String],
-  avatar: Option[String]
+  avatar: Option[String],
+  address: List[Address]
 )
 
 trait ProfileFormatter extends BaseJsonFormats{
-  implicit val profileFormatter = jsonFormat3(Profile)
+  implicit val profileFormatter = jsonFormat4(Profile)
 }
 
 object ProfileFormatter extends ProfileFormatter

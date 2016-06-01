@@ -10,16 +10,17 @@ import spray.json.DefaultJsonProtocol
   */
 case class User (
   id: String,
-  username: Option[String],
-  password: Option[String],
+  username: String,
+  password: String,
   status: Int,
-  createdAt: DateTime,
-  updatedAt: Option[DateTime]
+  createdAt: DateTime = new DateTime(),
+  updatedAt: DateTime = new DateTime(),
+  profile: Profile
 )
 
 trait UserFormatter extends BaseJsonFormats{
 
-  implicit val userFormatter = jsonFormat6(User)
+  implicit val userFormatter = jsonFormat7(User)
 }
 
 object UserFormatter extends UserFormatter

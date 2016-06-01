@@ -39,6 +39,6 @@ object ProductFormatter extends ProductFormatter
 object ProductActions{
   case class AddProduct(product: Product)
   case class DeleteProduct(product: String)
-  case class ListProduct(category: Category)
+  case class ListProducts(category: Option[String])
   case class GetProduct(id: String)
 }

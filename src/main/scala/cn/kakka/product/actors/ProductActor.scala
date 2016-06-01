@@ -2,7 +2,7 @@ package kakka
 package product
 
 import akka.actor.{Actor, ActorLogging, Props}
-import kakka.product.ProductActions.{AddProduct, GetProduct}
+import kakka.product.ProductActions.{AddProduct, GetProduct, ListProducts}
 import kakka.product.dao.ProductPersistence
 import org.joda.time.DateTime
 import spray.util.LoggingContext
@@ -30,7 +30,14 @@ class ProductActor()(implicit log: LoggingContext) extends Actor with ActorLoggi
       println("product Actor : AddProduct")
       persistence.insert(p) match {
         case Success(ids) => sender() ! ids.toSeq
-        case Failure(e) => Seq.empty
+        case Failure(e) => Failure(e)
+      }
+    }
+    case ListProducts(cat: Option[String]) => {
+      println("product Actor : ListProducts")
+      persistence.findAll() match {
+        case Success(products) => sender() ! products.toSeq
+        case Failure(e) => Failure(e)
       }
     }
     case _ => println("exit.")

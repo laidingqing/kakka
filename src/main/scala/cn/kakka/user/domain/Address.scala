@@ -11,10 +11,10 @@ case class Address (
      name: String,
      province: String,
      city: String,
+     region: String,
      address: String,
      phone: String,
      mobile: String,
-     email: String,
      alias: String
 )
 

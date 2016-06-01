@@ -7,6 +7,7 @@ import kakka.basket.Basket
 import kakka.order.Order
 import org.joda.time.DateTime
 import kakka.product.{Category, Product}
+import kakka.user.{Address, Profile, User}
 /**
   * Created by skylai on 16/5/30.
   */
@@ -72,5 +73,36 @@ trait MongoConversions {
         e.printStackTrace()
         throw e
     }
+  }
+
+  def userToMongo(u: User): DBObject = {
+    val db = MongoDBObject.newBuilder
+
+    val userInfo = MongoDBObject.newBuilder
+    userInfo += "full_name" -> u.profile.fullName
+    userInfo += "email" -> u.profile.email
+    userInfo += "phone" -> u.profile.avatar
+    userInfo += "address" -> u.profile.address.map(addressToMongo(_))
+
+    db += "user_info" -> userInfo.result
+    db += "user_name" -> u.username
+    db += "password" -> u.password
+    db += "status" -> u.status
+    db += "created_at" -> u.createdAt
+    db += "updated_at" -> u.updatedAt
+    db.result
+  }
+
+  def addressToMongo(addr: Address): DBObject = {
+    val db = MongoDBObject.newBuilder
+    db += "name" -> addr.name
+    db += "province" -> addr.province
+    db += "region" -> addr.region
+    db += "city" -> addr.city
+    db += "address" -> addr.address
+    db += "alias" -> addr.alias
+    db += "mobile" -> addr.mobile
+    db += "phone" -> addr.phone
+    db.result
   }
 }

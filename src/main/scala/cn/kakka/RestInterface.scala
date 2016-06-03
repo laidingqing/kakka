@@ -8,6 +8,8 @@ import scala.language.postfixOps
 import akka.actor._
 import akka.util.Timeout
 import cn.kakka.routing.{BasketRoute, OrderRoute, ProductRoute, UserRoute}
+import kakka.commons.{CoreConfig, HttpConfig}
+import kakka.dao.Database
 import kakka.routing.{ErrorFormat, IndexRoute, RouteDefinitions}
 
 class RestInterface extends HttpServiceActor with BaseApi {
@@ -23,11 +25,16 @@ trait BaseApi extends HttpService with RouteDefinitions with ActorLogging { acto
   implicit val timeout = Timeout(5 seconds)
   implicit val dispatcher = context.dispatcher
 
-  object IndexRoute extends IndexRoute(context)
-  object UserRoute extends UserRoute(context)
-  object ProductRoute extends ProductRoute(context)
-  object OrderRoute extends OrderRoute(context)
-  object BasketRoute extends BasketRoute(context)
+  val coreConf = CoreConfig.load()
+  val httpConf = HttpConfig.load()
+  val db = Database.open(coreConf.mongoDbServers, coreConf.mongoDbDatabaseName)
+
+
+  object IndexRoute extends IndexRoute(context, httpConf, db)
+  object UserRoute extends UserRoute(context, httpConf, db)
+  object ProductRoute extends ProductRoute(context, httpConf, db)
+  object OrderRoute extends OrderRoute(context, httpConf, db)
+  object BasketRoute extends BasketRoute(context, httpConf, db)
 
   val routeDefinitions = Seq(
     IndexRoute,

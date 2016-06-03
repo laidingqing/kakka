@@ -15,22 +15,13 @@ class BasketActor extends Actor with ActorLogging{
   implicit val system = context.system
   implicit val executionContext = context.dispatcher
 
-  val persistence = new BasketPersistence()
-
   override def receive = {
     case GetBasketList(userId) => {
       println("basket Actor : GetBasketList")
-
-      persistence.findBySKU("asdfasdf") match {
-        case Success(baskets) => sender () ! baskets.toSeq
-        case Failure(e) => Seq.empty
-      }
+      sender () ! ""
     }
     case AddToBasket(user, sku, count) => {
-      persistence.insert(Basket(id="", user = user, sku = sku, quantity = count)) match {
-        case Success(ids) => sender () ! ids
-        case Failure(e) => println("error:", e)
-      }
+      sender () ! ""
     }
   }
 }

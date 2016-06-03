@@ -10,8 +10,9 @@ import kakka.BasicRoute
 import kakka.product.{Category, Product, ProductActor}
 import kakka.product.ProductActions._
 import kakka.product.ProductFormatter._
-import kakka.commons.CORSDirectives
-import org.joda.time.DateTime
+import kakka.commons.{CORSDirectives, HttpConfig}
+import kakka.dao.Database
+import reactivemongo.bson.BSONDateTime
 import spray.http.StatusCodes
 
 import scala.concurrent.duration._
@@ -22,14 +23,14 @@ import scala.util.{Failure, Success}
 /**
   * Created by skylai on 16/5/26.
   */
-class ProductRoute(val context: ActorContext)(implicit log: LoggingContext) extends BasicRoute with CORSDirectives{
+class ProductRoute(val context: ActorContext, val httpConf: HttpConfig, val db: Database)(implicit val executor: ExecutionContext) extends BasicRoute with CORSDirectives{
   implicit val system = context.system
   implicit val timeout = Timeout(10.seconds)
   implicit val ec = ExecutionContext.Implicits.global
   val resource = "product"
   val productActor = system.actorOf(ProductActor.props)
 
-  val route = pathPrefix("api" / "v1" / "products"){
+  val route = pathPrefix("v1" / "products"){
     pathEndOrSingleSlash{
       get{
         corsFilter(List("*")) {
@@ -49,7 +50,7 @@ class ProductRoute(val context: ActorContext)(implicit log: LoggingContext) exte
             price = 0.0,
             quantity = 100,
             createdBy = "",
-            createdAt = new DateTime()
+            createdAt = BSONDateTime(System.currentTimeMillis)
           )
           val future = (productActor ? AddProduct(p)).mapTo[Seq[String]]
           onComplete(future) {

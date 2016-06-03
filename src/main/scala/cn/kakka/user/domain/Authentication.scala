@@ -2,7 +2,7 @@ package kakka
 package user
 
 import kakka.commons.BaseJsonFormats
-import org.joda.time.DateTime
+import reactivemongo.bson.BSONDateTime
 import spray.json.DefaultJsonProtocol
 
 /**
@@ -13,7 +13,7 @@ case class Authentication (
   userId: String,
   uid: String,
   provider: String,
-  createdAt: Option[DateTime]
+  createdAt: BSONDateTime
 )
 
 trait AuthenticationFormatter extends BaseJsonFormats{

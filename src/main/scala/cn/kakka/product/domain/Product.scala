@@ -3,7 +3,7 @@ package product
 
 import cn.kakka.product.domain.ProductImage
 import kakka.commons.BaseJsonFormats
-import org.joda.time.DateTime
+import reactivemongo.bson.BSONDateTime
 /**
   * Created by skylai on 16/5/26.
   */
@@ -16,7 +16,7 @@ case class Product(
      price: Double = 0,
      quantity: Int,
      createdBy: String = "",
-     createdAt: DateTime = new DateTime(),
+     createdAt: BSONDateTime,
      categories: List[String] = List.empty,
      images: List[String] = List.empty,
      keyWords: List[String] = List.empty

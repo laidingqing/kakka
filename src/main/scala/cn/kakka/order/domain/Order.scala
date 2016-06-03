@@ -2,7 +2,7 @@ package kakka
 package order
 
 import kakka.commons.BaseJsonFormats
-import org.joda.time.DateTime
+import reactivemongo.bson.BSONDateTime
 import spray.json.DefaultJsonProtocol
 
 /**
@@ -15,7 +15,7 @@ case class Order (
   amount: BigDecimal,
   status: Int,
   items: List[String],
-  createdAt: DateTime
+  createdAt: BSONDateTime
 )
 
 trait OrderFormatter extends BaseJsonFormats{

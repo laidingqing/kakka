@@ -8,27 +8,28 @@ import kakka.basket.BasketAction.AddToBasket
 
 import scala.concurrent.duration._
 import spray.routing._
-import kakka.commons.CORSDirectives
+import kakka.commons.{CORSDirectives, HttpConfig}
 import spray.http.{MediaTypes, StatusCodes}
 import kakka.basket.{Basket, BasketActor}
 import kakka.basket.BasketActions.GetBasketList
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.util.Success
 import scala.util.Failure
 import kakka.basket.BasketFormatter._
+import kakka.dao.Database
 import spray.util.LoggingContext
 /**
   * Created by skylai on 16/5/26.
   */
-class BasketRoute(val context: ActorContext)(implicit log: LoggingContext) extends BasicRoute with CORSDirectives{
+class BasketRoute(context: ActorContext, val httpConf: HttpConfig, val db: Database)(implicit val executor: ExecutionContext) extends BasicRoute with CORSDirectives{
   implicit val system = context.system
   implicit val timeout = Timeout(10.seconds)
   implicit val ec = ExecutionContext.Implicits.global
   val resource = "basket"
   val basketActor = context.actorOf(BasketActor.props)
 
-  val route = pathPrefix("api" / "v1" / "baskets"){
+  val route = pathPrefix("v1" / "baskets"){
     pathEndOrSingleSlash{
       get{
         corsFilter(List("*")) {

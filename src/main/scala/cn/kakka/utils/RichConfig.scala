@@ -1,0 +1,30 @@
+package kakka.utils
+
+import java.util.concurrent.TimeUnit
+
+import kakka.utils.HexStringConverter._
+import com.typesafe.config.{Config, ConfigException}
+
+import scala.concurrent.duration.FiniteDuration
+import scala.language.implicitConversions
+
+class RichConfig(val inner: Config) {
+  def getOptionalString(path: String): Option[String] = try {
+    Some(inner.getString(path))
+  } catch {
+    case e: ConfigException.Missing => None
+  }
+
+  def getFiniteDuration(path: String): FiniteDuration = {
+    val unit = TimeUnit.MICROSECONDS
+    FiniteDuration(inner.getDuration(path, unit), unit)
+  }
+
+  def getByteArray(path: String): Array[Byte] = {
+    hex2bytes(inner.getString(path))
+  }
+}
+
+object RichConfig {
+  implicit def toRichConfig(inner: Config): RichConfig = new RichConfig(inner)
+}

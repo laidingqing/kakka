@@ -1,11 +1,9 @@
 package kakka
 package basket
 
-import com.mongodb.casbah.commons.MongoDBObject
 import kakka.basket.BasketStatus.BasketStatus
 import kakka.commons.BaseJsonFormats
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
+import reactivemongo.bson.BSONDateTime
 import spray.json.{DefaultJsonProtocol, JsString, JsValue, JsonFormat}
 /**
   * Created by skylai on 16/5/26.
@@ -14,7 +12,7 @@ case class Basket (id: String,
                    user: String,
                    sku: String,
                    quantity: Int = 1,
-                   createdAt: DateTime = new DateTime(),
+                   createdAt: BSONDateTime,
                    status:BasketStatus = BasketStatus.Created){
 
 }

@@ -6,6 +6,8 @@ import Directives._
 
 trait RouteDefinitions {
   val routeDefinitions: Seq[BasicRoute]
-  lazy val routes: Route = routeDefinitions.map(_.route).reduce(_ ~ _)
+  lazy val routes: Route = pathPrefix("api"){
+    routeDefinitions.map(_.route).reduce(_ ~ _)
+  }
   implicit lazy val rejectionHandler: RejectionHandler = (routeDefinitions :+ BasicErrorHandler).map(_.rejectionHandler).reduce(_ orElse _)
 }

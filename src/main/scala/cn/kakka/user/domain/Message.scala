@@ -2,7 +2,7 @@ package kakka
 package user
 
 import kakka.commons.BaseJsonFormats
-import org.joda.time.DateTime
+import reactivemongo.bson.BSONDateTime
 import spray.json.DefaultJsonProtocol
 
 /**
@@ -14,7 +14,7 @@ case class Message (
   subject: String,
   content: String,
   category: Int,
-  createdAt: DateTime,
+  createdAt: BSONDateTime,
   read: Boolean
 )
 

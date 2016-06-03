@@ -4,9 +4,14 @@ package routing
 import akka.actor.ActorContext
 import spray.routing._
 import Directives._
+import kakka.commons.HttpConfig
+import kakka.dao.Database
 import spray.http.MediaTypes._
+import spray.httpx.encoding.Gzip
 
-class IndexRoute(context: ActorContext) extends BasicRoute {
+import scala.concurrent.ExecutionContext
+
+class IndexRoute(context: ActorContext, val httpConf: HttpConfig, val db: Database)(implicit val executor: ExecutionContext) extends BasicRoute {
   implicit val system = context.system
   val resource = "index"
 
@@ -14,7 +19,9 @@ class IndexRoute(context: ActorContext) extends BasicRoute {
     pathPrefix("static") {
       getFromResourceDirectory("static")
     } ~ pathEndOrSingleSlash {
-      getFromResource("index.html")
+      encodeResponse(Gzip) {
+        getFromResource("index.html")
+      }
     }
   }
 }
